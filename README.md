@@ -47,25 +47,7 @@ MiniSO/
 └── README.md
 ```
 
-## 3. Compilación
-
-El proyecto puede compilarse utilizando el `Makefile` o mediante un comando directo.
-
-**Compilación con Makefile:**
-
-```bash
-make
-```
-
-**Compilación directa:**
-
-```bash
-gcc -std=c11 -D_GNU_SOURCE -Wall -Wextra -O2 -pthread \
-    -Iinclude main.c procesos.c hilos.c particionamiento.c paginacion.c \
-    -o miniso
-```
-
-## 4. Ejecución
+## 3. Ejecución
 
 Para iniciar la aplicación, ejecutar el siguiente comando:
 
@@ -84,9 +66,9 @@ Para iniciar la aplicación, ejecutar el siguiente comando:
 ============================
 ```
 
-## 5. Uso de la aplicación
+## 4. Uso de la aplicación
 
-### Módulo I — Gestión de procesos
+### Módulo I  Gestión de procesos
 
 Este módulo permite trabajar con la creación, ejecución y finalización de procesos mediante llamadas al sistema.
 
@@ -96,7 +78,7 @@ Este módulo permite trabajar con la creación, ejecución y finalización de pr
 2. **Estados de finalización:** muestra diferentes estados de terminación de los procesos, incluyendo procesos que finalizan con `exit(42)`, procesos terminados por señales y errores durante la ejecución de `exec()`.
 3. **Ejecución de comandos personalizados:** permite introducir y ejecutar comandos del sistema utilizando `fork()`, `execvp()` y `waitpid()`.
 
-### Módulo II — Gestión de hilos
+### Módulo II  Gestión de hilos
 
 Este módulo implementa el problema clásico del productor-consumidor para demostrar la concurrencia y sincronización entre hilos.
 
@@ -109,7 +91,7 @@ Este módulo implementa el problema clásico del productor-consumidor para demos
 
 La sincronización se realiza mediante mutex y variables de condición (`no_lleno` y `no_vacio`), evitando conflictos durante el acceso compartido al búfer.
 
-### Módulo III — Gestión de memoria
+### Módulo III  Gestión de memoria
 
 Este módulo permite simular dos técnicas fundamentales de administración de memoria: particionamiento y paginación.
 
@@ -143,14 +125,14 @@ Simula la administración de memoria mediante páginas y marcos, permitiendo ges
 
 ---
 
-## 6. Notas
+## 5. Notas
 
 - **Entrada segura:** las funciones `leer_entero()` y `leer_opcion()`, implementadas en `util.h`, permiten controlar y validar las entradas del usuario.
 - **Finalización segura:** al ingresar `Ctrl+D`, el programa reconoce el fin de entrada y permite salir limpiamente.
 - **Sincronización de hilos:** el problema productor-consumidor utiliza mutex y variables de condición (`no_lleno` y `no_vacio`).
 - **Manejo de errores:** los módulos utilizan `0` para indicar una operación exitosa y `-1` para indicar un error.
 
-## 7. Problemas comunes
+## 6. Problemas comunes
 
 | Problema | Solución |
 |---|---|
