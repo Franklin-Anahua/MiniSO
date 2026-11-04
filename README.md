@@ -168,4 +168,3 @@ sudo apt install psmisc
 
 ---
 
-**MiniSO — Proyecto académico de Sistemas Operativos.**
