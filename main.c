@@ -7,9 +7,7 @@
 static void menu_memoria(void) {
     int op;
     do {
-        printf("\n----------------------------------------\n");
         printf("\tmodulo iii gestion de memoria\n");
-        printf("----------------------------------------\n");
         printf("  1. particionamiento de memoria first-fit\n");
         printf("  2. paginacion\n");
         printf("  0. volver\n");
@@ -25,9 +23,7 @@ int main(void) {
     printf("\nminiso\n\n");
 
     do {
-        printf("----------------------------------------\n");
         printf(" menu principal\n");
-        printf("----------------------------------------\n");
         printf("  1. gestion de procesos\n");
         printf("  2. gestion de hilos\n");
         printf("  3. gestion de memoria\n");
