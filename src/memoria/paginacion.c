@@ -28,8 +28,6 @@ void pag_configurar(int tam, int marcos) {
     for (int i = 0; i < max_proc; i++)
         for (int j = 0; j < max_pag; j++)
             proc[i].tabla[j] = -1;
-    printf(">> paginacion configurada pagina %d bytes marcos %d memoria fisica %d bytes\n",
-           tam, marcos, tam * marcos);
 }
 
 static proceso *buscar_proc(int pid) {
@@ -39,22 +37,22 @@ static proceso *buscar_proc(int pid) {
 }
 
 int pag_crear_proceso(int pid, int bytes) {
-    if (tam_pag == 0) { printf(">> primero configure la paginacion\n"); return -1; }
-    if (pid <= 0 || bytes <= 0) { printf(">> pid y tamano deben ser positivos\n"); return -1; }
-    if (buscar_proc(pid)) { printf(">> el proceso %d ya existe\n", pid); return -1; }
+    if (tam_pag == 0) { printf(" primero configure la paginacion\n"); return -1; }
+    if (pid <= 0 || bytes <= 0) { printf(" pid y tamano deben ser positivos\n"); return -1; }
+    if (buscar_proc(pid)) { printf(" el proceso %d ya existe\n", pid); return -1; }
 
     int npag = (bytes + tam_pag - 1) / tam_pag;
-    if (npag > max_pag) { printf(">> el proceso excede %d paginas\n", max_pag); return -1; }
+    if (npag > max_pag) { printf(" el proceso excede %d paginas\n", max_pag); return -1; }
 
     int libres = 0;
     for (int i = 0; i < n_marcos; i++) if (marco_pid[i] == 0) libres++;
     if (libres < npag) {
-        printf(">> proceso %d necesita %d marcos y solo hay %d libres\n", pid, npag, libres);
+        printf(" proceso %d necesita %d marcos y solo hay %d libres\n", pid, npag, libres);
         return -1;
     }
     proceso *p = NULL;
     for (int i = 0; i < max_proc; i++) if (!proc[i].activo) { p = &proc[i]; break; }
-    if (!p) { printf(">> tabla de procesos llena\n"); return -1; }
+    if (!p) { printf(" tabla de procesos llena\n"); return -1; }
 
     p->activo = 1; p->pid = pid; p->bytes = bytes; p->npag = npag;
     for (int i = 0; i < max_pag; i++) p->tabla[i] = -1;
@@ -67,36 +65,36 @@ int pag_crear_proceso(int pid, int bytes) {
             p->tabla[pg++] = m;
         }
     }
-    printf(">> proceso %d con %d bytes usa %d paginas fragmentacion interna final %d bytes\n",
+    printf(" proceso %d con %d bytes usa %d paginas fragmentacion interna final %d bytes\n",
            pid, bytes, npag, npag * tam_pag - bytes);
     return 0;
 }
 
 int pag_liberar_proceso(int pid) {
     proceso *p = buscar_proc(pid);
-    if (!p) { printf(">> el proceso %d no existe\n", pid); return -1; }
+    if (!p) { printf(" el proceso %d no existe\n", pid); return -1; }
     for (int i = 0; i < n_marcos; i++)
         if (marco_pid[i] == pid) { marco_pid[i] = 0; marco_pag[i] = -1; }
     p->activo = 0;
-    printf(">> proceso %d liberado sus marcos quedaron libres\n", pid);
+    printf(" proceso %d liberado sus marcos quedaron libres\n", pid);
     return 0;
 }
 
 int pag_liberar_pagina(int pid, int pagina) {
     proceso *p = buscar_proc(pid);
-    if (!p) { printf(">> el proceso %d no existe\n", pid); return -1; }
+    if (!p) { printf(" el proceso %d no existe\n", pid); return -1; }
     if (pagina < 0 || pagina >= p->npag || p->tabla[pagina] < 0) {
-        printf(">> la pagina %d del proceso %d no esta asignada\n", pagina, pid);
+        printf(" la pagina %d del proceso %d no esta asignada\n", pagina, pid);
         return -1;
     }
     int m = p->tabla[pagina];
     marco_pid[m] = 0; marco_pag[m] = -1; p->tabla[pagina] = -1;
-    printf(">> pagina %d del proceso %d liberada el marco %d quedo libre\n", pagina, pid, m);
+    printf(" pagina %d del proceso %d liberada el marco %d quedo libre\n", pagina, pid, m);
     return 0;
 }
 
 void pag_mostrar_marcos(void) {
-    if (tam_pag == 0) { printf(">> paginacion sin configurar\n"); return; }
+    if (tam_pag == 0) { printf(" paginacion sin configurar\n"); return; }
     printf("\n  marco estado\n  -----------------------\n");
     for (int i = 0; i < n_marcos; i++) {
         if (marco_pid[i]) printf("  %5d proceso %d pagina %d\n", i, marco_pid[i], marco_pag[i]);
@@ -106,7 +104,7 @@ void pag_mostrar_marcos(void) {
 
 void pag_mostrar_tabla(int pid) {
     proceso *p = buscar_proc(pid);
-    if (!p) { printf(">> el proceso %d no existe\n", pid); return; }
+    if (!p) { printf(" el proceso %d no existe\n", pid); return; }
     printf("\n  tabla de paginas del proceso %d con %d bytes y %d paginas\n", pid, p->bytes, p->npag);
     printf("  pagina marco\n  -------------\n");
     for (int i = 0; i < p->npag; i++) {
@@ -117,9 +115,9 @@ void pag_mostrar_tabla(int pid) {
 
 int pag_traducir(int pid, int dir, long *fisica) {
     proceso *p = buscar_proc(pid);
-    if (!p) { printf(">> el proceso %d no existe\n", pid); return -1; }
+    if (!p) { printf(" el proceso %d no existe\n", pid); return -1; }
     if (dir < 0 || dir >= p->bytes) {
-        printf(">> direccion invalida %d fuera del espacio logico del proceso %d de 0 a %d\n",
+        printf(" direccion invalida %d fuera del espacio logico del proceso %d de 0 a %d\n",
                dir, pid, p->bytes - 1);
         return -1;
     }
@@ -128,7 +126,7 @@ int pag_traducir(int pid, int dir, long *fisica) {
     printf("  direccion logica %d pagina %d entre %d da %d desplazamiento %d modulo %d da %d\n",
            dir, dir, tam_pag, pagina, dir, tam_pag, desp);
     if (p->tabla[pagina] < 0) {
-        printf("  >> fallo de pagina la pagina %d del proceso %d no tiene marco\n",
+        printf("   fallo de pagina la pagina %d del proceso %d no tiene marco\n",
                pagina, pid);
         return -1;
     }
@@ -141,7 +139,7 @@ int pag_traducir(int pid, int dir, long *fisica) {
 }
 
 static void demo_paginacion(void) {
-    printf("\ndemo de paginacion con pagina 256 bytes y 8 marcos\n");
+    printf("\nsimulacion de paginacion con pagina 256 bytes y 8 marcos\n");
     pag_configurar(256, 8);
     pag_crear_proceso(10, 512);
     pag_crear_proceso(20, 1024);
@@ -180,9 +178,7 @@ void menu_paginacion(void) {
     int op;
     if (tam_pag == 0) pag_configurar(256, 8);
     do {
-        printf("\n----------------------------------------\n");
         printf(" modulo iii-b paginacion\n");
-        printf("----------------------------------------\n");
         printf("  1. configurar tamano de pagina y marcos reinicia\n");
         printf("  2. crear proceso y asignar paginas a marcos\n");
         printf("  3. liberar proceso\n");
@@ -190,7 +186,7 @@ void menu_paginacion(void) {
         printf("  5. mostrar marcos de memoria fisica\n");
         printf("  6. mostrar tabla de paginas de un proceso\n");
         printf("  7. traducir direccion logica a fisica\n");
-        printf("  8. demo con traducciones y casos invalidos\n");
+        printf("  8. simulacion con traducciones y casos invalidos\n");
         printf("  0. volver\n");
         op = leer_opcion("opcion");
         switch (op) {
