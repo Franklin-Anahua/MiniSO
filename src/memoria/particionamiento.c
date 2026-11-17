@@ -22,7 +22,6 @@ void part_configurar(int total) {
     bl[0].inicio = 0;
     bl[0].tam = total;
     bl[0].id = 0;
-    printf(">> memoria configurada con %d kb en un unico bloque libre\n", total);
 }
 
 static int buscar_id(int id) {
@@ -43,14 +42,14 @@ static void estadisticas(int *libre, int *mayor, int *huecos) {
 }
 
 int part_solicitar(int id, int tam) {
-    if (mem_total == 0) { printf(">> primero configure la memoria\n"); return -1; }
-    if (id <= 0 || tam <= 0) { printf(">> id y tamano deben ser positivos\n"); return -1; }
-    if (buscar_id(id) >= 0) { printf(">> el proceso %d ya tiene un bloque asignado\n", id); return -1; }
+    if (mem_total == 0) { printf(" primero configure la memoria\n"); return -1; }
+    if (id <= 0 || tam <= 0) { printf(" id y tamano deben ser positivos\n"); return -1; }
+    if (buscar_id(id) >= 0) { printf(" el proceso %d ya tiene un bloque asignado\n", id); return -1; }
 
     for (int i = 0; i < nb; i++) {
         if (bl[i].id == 0 && bl[i].tam >= tam) {
             if (bl[i].tam > tam) {
-                if (nb >= max_bloques) { printf(">> tabla de bloques llena\n"); return -1; }
+                if (nb >= max_bloques) { printf(" tabla de bloques llena\n"); return -1; }
                 memmove(&bl[i + 2], &bl[i + 1], (nb - i - 1) * sizeof(bloque));
                 bl[i + 1].inicio = bl[i].inicio + tam;
                 bl[i + 1].tam = bl[i].tam - tam;
@@ -59,7 +58,7 @@ int part_solicitar(int id, int tam) {
                 bl[i].tam = tam;
             }
             bl[i].id = id;
-            printf(">> first-fit proceso %d con %d kb va al bloque %d a %d\n",
+            printf(" first-fit proceso %d con %d kb va al bloque %d a %d\n",
                    id, tam, bl[i].inicio, bl[i].inicio + bl[i].tam - 1);
             return bl[i].inicio;
         }
@@ -68,24 +67,24 @@ int part_solicitar(int id, int tam) {
     int libre, mayor, huecos;
     estadisticas(&libre, &mayor, &huecos);
     if (libre >= tam)
-        printf(">> proceso %d con %d kb rechazado por fragmentacion externa hay %d kb en %d huecos mayor %d kb\n",
+        printf(" proceso %d con %d kb rechazado por fragmentacion externa hay %d kb en %d huecos mayor %d kb\n",
                id, tam, libre, huecos, mayor);
     else
-        printf(">> proceso %d con %d kb rechazado memoria insuficiente libre %d kb\n",
+        printf(" proceso %d con %d kb rechazado memoria insuficiente libre %d kb\n",
                id, tam, libre);
     return -1;
 }
 
 int part_liberar(int id) {
     int i = buscar_id(id);
-    if (i < 0) { printf(">> el proceso %d no tiene bloque asignado\n", id); return -1; }
+    if (i < 0) { printf(" el proceso %d no tiene bloque asignado\n", id); return -1; }
     bl[i].id = 0;
-    printf(">> proceso %d liberado del bloque %d a %d\n",
+    printf(" proceso %d liberado del bloque %d a %d\n",
            id, bl[i].inicio, bl[i].inicio + bl[i].tam - 1);
 
     for (int k = 0; k + 1 < nb; ) {
         if (bl[k].id == 0 && bl[k + 1].id == 0) {
-            printf(">> union de huecos %d a %d con %d a %d\n",
+            printf(" union de huecos %d a %d con %d a %d\n",
                    bl[k].inicio, bl[k].inicio + bl[k].tam - 1,
                    bl[k + 1].inicio, bl[k + 1].inicio + bl[k + 1].tam - 1);
             bl[k].tam += bl[k + 1].tam;
@@ -97,7 +96,7 @@ int part_liberar(int id) {
 }
 
 void part_mostrar(void) {
-    if (mem_total == 0) { printf(">> memoria sin configurar\n"); return; }
+    if (mem_total == 0) { printf(" memoria sin configurar\n"); return; }
     printf("\n  numero inicio fin tamano estado\n");
     printf("  --------------------------------\n");
     for (int i = 0; i < nb; i++) {
@@ -131,12 +130,12 @@ static void escenario_1(void) {
     part_solicitar(1, 20); part_solicitar(2, 30);
     part_solicitar(3, 10); part_solicitar(4, 25);
     part_mostrar();
-    printf("\n  >> se liberan los procesos 2 y 4\n");
+    printf("\n   se liberan los procesos 2 y 4\n");
     part_liberar(2); part_liberar(4);
     part_mostrar();
-    printf("\n  >> el proceso 5 pide 50 kb hay 70 libres pero fragmentados\n");
+    printf("\n   el proceso 5 pide 50 kb hay 70 libres pero fragmentados\n");
     part_solicitar(5, 50);
-    printf("\n  >> el proceso 6 pide 25 kb first-fit reutiliza el primer hueco que quepa\n");
+    printf("\n   el proceso 6 pide 25 kb first-fit reutiliza el primer hueco que quepa\n");
     part_solicitar(6, 25);
     part_mostrar();
 }
@@ -147,15 +146,15 @@ static void escenario_2(void) {
     part_solicitar(1, 16); part_solicitar(2, 16);
     part_solicitar(3, 16); part_solicitar(4, 16);
     part_mostrar();
-    printf("\n  >> se liberan 1 y 3 los huecos quedan separados por el 2\n");
+    printf("\n   se liberan 1 y 3 los huecos quedan separados por el 2\n");
     part_liberar(1); part_liberar(3);
     part_mostrar();
-    printf("\n  >> el proceso 5 pide 20 kb no cabe en ningun hueco de 16 kb\n");
+    printf("\n   el proceso 5 pide 20 kb no cabe en ningun hueco de 16 kb\n");
     part_solicitar(5, 20);
-    printf("\n  >> se libera el 2 los tres bloques contiguos se unen en 48 kb\n");
+    printf("\n   se libera el 2 los tres bloques contiguos se unen en 48 kb\n");
     part_liberar(2);
     part_mostrar();
-    printf("\n  >> el proceso 5 pide 20 kb nuevamente\n");
+    printf("\n   el proceso 5 pide 20 kb nuevamente\n");
     part_solicitar(5, 20);
     part_mostrar();
 }
@@ -164,9 +163,7 @@ void menu_particionamiento(void) {
     int op;
     if (mem_total == 0) part_configurar(100);
     do {
-        printf("\n----------------------------------------\n");
         printf(" modulo iii-a particionamiento first-fit\n");
-        printf("----------------------------------------\n");
         printf("  1. configurar memoria total reinicia todo\n");
         printf("  2. solicitar bloque\n");
         printf("  3. liberar bloque\n");
