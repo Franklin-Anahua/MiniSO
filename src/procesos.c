@@ -157,9 +157,7 @@ static void ejecutar_comando_usuario(void) {
 void modulo_procesos(void) {
     int op;
     do {
-        printf("\n----------------------------------------\n");
         printf("\t modulo i - gestion de procesos\n");
-        printf("----------------------------------------\n");
         printf("  1. hijos concurrentes con ps pstree y wait\n");
         printf("  2. estados de finalizacion y errores de exec\n");
         printf("  3. ejecutar un comando propio fork exec waitpid\n");
