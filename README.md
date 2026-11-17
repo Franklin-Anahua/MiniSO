@@ -60,4 +60,4 @@ Una vez finalizada la compilación, iniciar la aplicación con:
 
 ### 5. Archivos y documentación
 - Informe final del proyecto: https://docs.google.com/document/d/1cflZgP408fFnBDhgdkAieYE9boV1dYxZhcoZCB1YRjY/edit?usp=sharing
-- - Diapositivas de presentación: https://canva.link/dpucvxk4e31804x
+- Diapositivas de presentación: https://canva.link/dpucvxk4e31804x
