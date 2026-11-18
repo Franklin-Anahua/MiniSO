@@ -52,7 +52,8 @@ Una vez finalizada la compilación, iniciar la aplicación con:
 
 ### 4.2. Ronald Alexander Huaman Huanca
 
-- **Video**
+- Video 1: https://youtu.be/ZDDeamShkpw
+- Video 2: https://youtu.be/CO7SlwaaTdw
 
 ### 4.3. Jhon Williams Anahua Layme
 
