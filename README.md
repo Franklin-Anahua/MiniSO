@@ -14,7 +14,7 @@ Para compilar y ejecutar el proyecto se necesitan los siguientes requisitos:
 
 ```text
 MiniSO/
-├── main.cpp
+├── main.c
 ├── include/
 │   ├── procesos.h
 │   ├── util.h
