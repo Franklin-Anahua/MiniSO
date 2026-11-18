@@ -48,7 +48,7 @@ Una vez finalizada la compilación, iniciar la aplicación con:
 
 ### 4.1. Franklin Cristofier Anahua Cahuachia
 
-- **Video** 
+- video: https://youtu.be/-A6MRFPWTr4?si=LSjeWezgY8S2LvE8
 
 ### 4.2. Ronald Alexander Huaman Huanca
 
